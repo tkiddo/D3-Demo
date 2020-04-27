@@ -1,7 +1,7 @@
 
-import Home from '../views/home'
-import About from '../views/about'
-import Login from '../views/login'
+import Home from '../views/home';
+import About from '../views/about';
+import Login from '../views/login';
 
 export default [
 	{
@@ -19,4 +19,4 @@ export default [
 		component: Login,
 		auth: false
 	}
-]
+];

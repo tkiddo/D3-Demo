@@ -1,20 +1,20 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import './index.less'
+import './index.scss';
 
-const Menu = (props) => {
+const Menu = () => {
 	const history = useHistory();
 	const signOut = () => {
 		localStorage.removeItem('token');
 		setTimeout(() => {
 			history.push('/');
 		}, 1000);
-	}
+	};
 	return (
 		<div className='top-bar'>
 			<button onClick={signOut}>sign out</button>
 		</div>
-	)
-}
+	);
+};
 
-export default React.memo(Menu)
+export default React.memo(Menu);

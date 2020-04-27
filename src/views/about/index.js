@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-const About = (props) => {
+const About = () => {
 	return (
 		<h1>about</h1>
-	)
-}
+	);
+};
 
-export default React.memo(About)
+export default React.memo(About);

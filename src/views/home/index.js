@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import LineChart from "../../components/chart/lineChart";
+import LineChart from '../../components/chart/lineChart';
 import Menu from '../../components/menu';
 
-const Home = (props) => {
+const Home = () => {
 
 	return (
 		<div>
