@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import routes from './routes/index';
 import ErrorBoundary from './components/share/errorBoundary';
 import FrontEndAuth from './components/share/frontEndAuth';

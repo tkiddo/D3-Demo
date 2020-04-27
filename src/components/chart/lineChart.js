@@ -1,5 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
+import color from '../../assets/style/color';
+import { split } from '../../utils/index';
 
 const width = 600;
 const height = 400;
@@ -20,6 +22,7 @@ const data = [
 ];
 
 const LineChart = () => {
+	const { first, second, third, grey } = color;
 	const xScale = d3
 		.scaleBand()
 		.domain(data.map(item => item.year))
@@ -30,40 +33,54 @@ const LineChart = () => {
 
 	const bandWidth = xScale.bandwidth();
 
-	const yScale =d3
+	const yScale = d3
 		.scaleLinear()
-		.domain([0,d3.max(data.map(item=>item.value))])
-		.range([chartHeight,0])
+		.domain([0, d3.max(data.map(item => item.value))])
+		.range([chartHeight, 0])
 		.nice();
 
 	const line = d3
 		.line()
-		.x(d=>{
-			return xScale(d.year)+bandWidth/2;
+		.x(d => {
+			return xScale(d.year) + bandWidth / 2;
 		})
-		.y(d=>{
+		.y(d => {
 			return yScale(d.value);
 		})
 		.curve(d3.curveCatmullRom);
-    
+
+	const v = split(height);
+	const h = split(width);
+
 	return (
 		<svg width={width} height={height}>
 			{/* 边框 */}
-			<rect x={0} y={0} width={width} height={height} stroke={'#666666'} fill="#fff" />
+			<rect x={0} y={0} width={width} height={height} stroke={second} fill={first} fillOpacity={'0.5'} rx={10} ry={10} />
+			{/* 背景网格 */}
+			{
+				v.map((item, idx) => (
+					<line x1={0} y1={item} x2={width} y2={item} key={idx} stroke={grey} strokeWidth={0.2} />
+				))
+			}
+			{
+				h.map((item, idx) => (
+					<line x1={item} y1={0} x2={item} y2={height} key={idx} stroke={grey} strokeWidth={0.2} />
+				))
+			}
 			<g
 				transform={`translate(${margin.left},${margin.top})`}>
 				{/* 标题 */}
-				<text x={chartWidth/2} y={0} textAnchor={'middle'}>
-                    折线图
+				<text x={chartWidth / 2} y={0} textAnchor={'middle'} fill={'#fff'}>
+					折线图
 				</text>
 				{/* x轴 */}
 				<g
 					transform={`translate(0,${chartHeight})`}>
 					{/* 轴线 */}
-					<line x1={0} y1={0} x2={chartWidth} y2={0} stroke={'#111111'} />
+					<line x1={0} y1={0} x2={chartWidth} y2={0} stroke={second} />
 					{/* 轴名称 */}
 					<text x={chartWidth} y={24} textAnchor='middle' fill={'orange'}>
-                        year
+						year
 					</text>
 					{/* 轴点 */}
 					{
@@ -71,8 +88,8 @@ const LineChart = () => {
 							const x = xScale(item.year) + bandWidth / 2;
 							return (
 								<g key={idx}>
-									<line x1={x} y1={0} x2={x} y2={6} stroke={'#111111'} />
-									<text x={x} y={24} fontSize={12} textAnchor={'middle'}>
+									<line x1={x} y1={0} x2={x} y2={6} stroke={second} />
+									<text x={x} y={24} fontSize={12} textAnchor={'middle'} fill={second}>
 										{item.year}
 									</text>
 								</g>
@@ -80,22 +97,22 @@ const LineChart = () => {
 						})
 					}
 					{/* 箭头标记 */}
-					<path d={`M ${chartWidth} -5 L ${chartWidth+15} 0 L ${chartWidth} 5`} fill={'#111111'}/>
+					<path d={`M ${chartWidth} -5 L ${chartWidth + 15} 0 L ${chartWidth} 5`} fill={second} />
 				</g>
 				{/* y轴 */}
 				<g>
-					<line x1={0} y1={0} x2={0} y2={chartHeight} stroke={'#111111'}/>
+					<line x1={0} y1={0} x2={0} y2={chartHeight} stroke={second} />
 					{/* 轴名称 */}
 					<text x={-24} y={-10} textAnchor='middle' fill={'orange'}>
-                        value
+						value
 					</text>
 					{
-						yScale.ticks(8).map((item,idx)=>{
+						yScale.ticks(8).map((item, idx) => {
 							const y = yScale(item);
 							return (
 								<g key={idx}>
-									<line x1={0} y1={y} x2={-6} y2={y} stroke={'#111111'}/>
-									<text x={-24} y={y} fontSize={12} textAnchor={'start'}>
+									<line x1={0} y1={y} x2={-6} y2={y} stroke={second} />
+									<text x={-24} y={y} fontSize={12} textAnchor={'start'} fill={second}>
 										{item}
 									</text>
 								</g>
@@ -103,19 +120,19 @@ const LineChart = () => {
 						})
 					}
 					{/* 箭头标记 */}
-					<path d={'M -5 0 L 0 -15 L 5 0'} fill={'#111111'}/>
+					<path d={'M -5 0 L 0 -15 L 5 0'} fill={second} />
 				</g>
 
 				{/* 数据点 */}
 				<g>
 					{
-						data.map((item,idx)=>{
-							const x=xScale(item.year)+bandWidth/2;
-							const y=yScale(item.value);
+						data.map((item, idx) => {
+							const x = xScale(item.year) + bandWidth / 2;
+							const y = yScale(item.value);
 							return (
 								<g key={idx}>
-									<circle cx={x} cy={y} r={'5'} fill={'red'}/>
-									<text x={x} y={y-10} textAnchor={'middle'}>
+									<circle cx={x} cy={y} r={'5'} fill={third} />
+									<text x={x} y={y - 10} textAnchor={'middle'} fill={second}>
 										{item.value}
 									</text>
 								</g>
@@ -123,7 +140,7 @@ const LineChart = () => {
 						})
 					}
 					{/* 连线 */}
-					<path d={line(data)} stroke={'purple'} fill={'none'}/>
+					<path d={line(data)} stroke={'purple'} fill={'none'} />
 				</g>
 			</g>
 		</svg>

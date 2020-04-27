@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './index.scss';
 
+
 const Menu = () => {
 	const history = useHistory();
 	const signOut = () => {
@@ -11,8 +12,11 @@ const Menu = () => {
 		}, 1000);
 	};
 	return (
-		<div className='top-bar'>
-			<button onClick={signOut}>sign out</button>
+		<div className='top-bar flex-between'>
+			<div className='logo'>
+				<span>数据可视化</span>
+			</div>
+			<button className='btn logout' onClick={signOut}>Logout</button>
 		</div>
 	);
 };
