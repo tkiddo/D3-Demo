@@ -1,0 +1,15 @@
+{
+	"bracketPairColorizer.consecutivePairColors": [
+
+		"()",
+		"[]",
+		"{}",
+		[
+			"Gold",
+			"Orchid",
+			"LightSkyBlue"
+		],
+		"Red"
+	],
+	"editor.formatOnSave": true
+}

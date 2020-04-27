@@ -1,19 +1,16 @@
-import React,{lazy} from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import './App.css';
-import SuspenseComponent from './components/share/suspenseComponent';
+import routes from './routes/index';
 import ErrorBoundary from './components/share/errorBoundary';
-
-const Home = lazy(()=>import('./views/home'));
+import FrontEndAuth from './components/share/frontEndAuth';
 
 function App() {
 	return (
 		<ErrorBoundary>
 			<Router>
 				<Switch>
-					<Route path='/'>
-						{SuspenseComponent(Home)}
-					</Route>
+					<FrontEndAuth config={routes} />
 				</Switch>
 			</Router>
 		</ErrorBoundary>
