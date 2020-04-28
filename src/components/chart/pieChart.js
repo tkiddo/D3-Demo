@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
+import color from '../../assets/style/color'
 
 const data = [
 	{
@@ -53,12 +54,13 @@ const noHoverStyle = {
 function Pie() {
 	const chartWidth = WIDTH - margin.left - margin.right;
 	const chartHeight = HEIGHT - margin.top - margin.bottom;
+	const { third } = color;
 
 	const [value, setValue] = useState(0);
 	const [active, setActive] = useState(null);
 
 	useEffect(() => {
-		const transition = d3.transition('pie').duration(1000);
+		const transition = d3.transition('pie').duration(1500);
 
 		transition.tween("pie", () => {
 			return t => {
@@ -107,7 +109,7 @@ function Pie() {
 							<path
 								d={arcGen()}
 								fill={COLORS[i % COLORS.length]}
-								stroke="#fff"
+								stroke={third}
 							/>
 						</g>
 					);
@@ -134,7 +136,7 @@ function Pie() {
 						>
 							<text
 								fontSize={16}
-								fill="#fff"
+								fill={'#fff'}
 								textAnchor="middle"
 								x={center[0]}
 								y={center[1]}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 import color from '../../assets/style/color';
 import { split } from '../../utils/index';
@@ -22,7 +22,7 @@ const data = [
 ];
 
 const LineChart = () => {
-	const { first, second, third, grey } = color;
+	const { first, second, third, grey, forth } = color;
 	const xScale = d3
 		.scaleBand()
 		.domain(data.map(item => item.year))
@@ -52,23 +52,16 @@ const LineChart = () => {
 	const v = split(height);
 	const h = split(width);
 
-	const [value, setValue] = useState(data.map(d => ({ ...d, year: '1991', value: 0 })));
+	const curveLine = useRef();
+
+	const [value, setValue] = useState(0);
+	const [l, setL] = useState(0)
 	useEffect(() => {
-		const t = d3.transition('line').duration(1000);
+		setL(curveLine.current.getTotalLength())
+		const t = d3.transition('line').duration(2000);
 		t.tween('line', () => {
-			let interpolates = data.map((d, i) => {
-				let start = (value[i] && value[i].value) || 0;
-				return d3.interpolateNumber(start, d.value);
-			})
-			let interpolates2 = data.map((d, i) => {
-				let start = (value[i] && value[i].year) || 0;
-				return d3.interpolateString(start, d.year);
-			})
 			return t => {
-				let newData = data.map((d, i) => {
-					return { ...d, value: interpolates[i](t) }
-				})
-				setValue(newData);
+				setValue(t)
 			};
 		})
 
@@ -77,7 +70,7 @@ const LineChart = () => {
 	return (
 		<svg width={width} height={height}>
 			{/* 边框 */}
-			<rect x={0} y={0} width={width} height={height} stroke={second} fill={first} fillOpacity={'0.5'} rx={10} ry={10} />
+			<rect x={0} y={0} width={width} height={height} stroke={forth} fill={first} fillOpacity={'0.5'} rx={10} ry={10} strokeWidth={0.1} />
 			{/* 背景网格 */}
 			{
 				v.map((item, idx) => (
@@ -146,9 +139,9 @@ const LineChart = () => {
 				</g>
 
 				{/* 连线 */}
-				<path d={line(value)} stroke={'purple'} fill={'none'} />
+				<path d={line(data)} stroke={'purple'} fill={'none'} ref={curveLine} strokeDasharray={`${l * value},${l}`} strokeWidth={2} />
 				{/* 数据点 */}
-				<g>
+				{/* <g>
 					{
 						data.map((item, idx) => {
 							const x = xScale(item.year) + bandWidth / 2;
@@ -164,7 +157,7 @@ const LineChart = () => {
 						})
 					}
 
-				</g>
+				</g> */}
 			</g>
 		</svg>
 	);

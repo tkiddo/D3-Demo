@@ -23,7 +23,7 @@ const BarChart = (props) => {
 	const [value, setValue] = useState(() => data.map(d => ({ ...d, y: 0 })));
 
 	useEffect(() => {
-		const t = d3.transition('bar').duration(1000);
+		const t = d3.transition('bar').duration(2000);
 
 		t.tween('bar', () => {
 			let interpolates = data.map((d, i) => {
@@ -66,7 +66,7 @@ const BarChart = (props) => {
 				<stop offset="100%" stopColor="#6ddead" />
 			</linearGradient>
 			{/* 边框 */}
-			<rect x={0} y={0} width={WIDTH} height={HEIGHT} stroke={second} fill={first} fillOpacity={'0.5'} rx={10} ry={10} />
+			<rect x={0} y={0} width={WIDTH} height={HEIGHT} stroke={second} fill={first} fillOpacity={'0.5'} rx={10} ry={10} strokeWidth={0.2} />
 			{/* 背景网格 */}
 			{
 				v.map((item, idx) => (

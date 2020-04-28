@@ -5,8 +5,19 @@
 	background: $first;
 	color: $second;
 	padding: 0 20px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+.top-wrapper {
+	width: 100%;
+	height: 50px;
 }
 
 .logout {
 	background: #fff;
+	padding: 0.1rem 0.3rem;
+	font-size: 0.5rem;
+	margin-left: 0.5rem;
 }

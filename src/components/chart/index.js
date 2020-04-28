@@ -35,9 +35,10 @@ const Charts = () => {
 	}, []);
 	return (
 		<Fragment>
+			<LineChart />
 			<PieChart />
 			<BarChart data={value} />
-			<LineChart />
+
 
 		</Fragment>
 	);

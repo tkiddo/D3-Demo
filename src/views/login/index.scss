@@ -1,0 +1,30 @@
+@import "../../assets/style/color.scss";
+
+.bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: $first;
+}
+
+.form {
+	width: 500px;
+	height: 300px;
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px 5px $grey;
+	padding: 30px;
+}
+
+.primary {
+	background: $first;
+	padding: 0.5rem 1.1rem;
+	color: #fff;
+	font-size: 1.1rem;
+}
+
+label {
+	color: $first;
+}
