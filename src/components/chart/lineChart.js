@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import color from '../../assets/style/color';
 import { split } from '../../utils/index';
@@ -51,6 +51,28 @@ const LineChart = () => {
 
 	const v = split(height);
 	const h = split(width);
+
+	const [value, setValue] = useState(data.map(d => ({ ...d, year: '1991', value: 0 })));
+	useEffect(() => {
+		const t = d3.transition('line').duration(1000);
+		t.tween('line', () => {
+			let interpolates = data.map((d, i) => {
+				let start = (value[i] && value[i].value) || 0;
+				return d3.interpolateNumber(start, d.value);
+			})
+			let interpolates2 = data.map((d, i) => {
+				let start = (value[i] && value[i].year) || 0;
+				return d3.interpolateString(start, d.year);
+			})
+			return t => {
+				let newData = data.map((d, i) => {
+					return { ...d, value: interpolates[i](t) }
+				})
+				setValue(newData);
+			};
+		})
+
+	}, [])
 
 	return (
 		<svg width={width} height={height}>
@@ -123,6 +145,8 @@ const LineChart = () => {
 					<path d={'M -5 0 L 0 -15 L 5 0'} fill={second} />
 				</g>
 
+				{/* 连线 */}
+				<path d={line(value)} stroke={'purple'} fill={'none'} />
 				{/* 数据点 */}
 				<g>
 					{
@@ -139,8 +163,7 @@ const LineChart = () => {
 							);
 						})
 					}
-					{/* 连线 */}
-					<path d={line(data)} stroke={'purple'} fill={'none'} />
+
 				</g>
 			</g>
 		</svg>

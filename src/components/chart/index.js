@@ -1,6 +1,7 @@
-import React,{Fragment,useEffect,useState} from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import BarChart from './barChart';
 import LineChart from './lineChart';
+import PieChart from './pieChart'
 
 const data = [
 	{
@@ -25,17 +26,19 @@ const data = [
 	}
 ];
 
-const Charts = ()=>{
-	const [value,setValue] = useState([]);
-	useEffect(()=>{
+const Charts = () => {
+	const [value, setValue] = useState([]);
+	useEffect(() => {
 		setTimeout(() => {
 			setValue(data);
-		}, 1000);
-	},[]);
+		}, 10);
+	}, []);
 	return (
 		<Fragment>
-			<BarChart data={data}/>
+			<PieChart />
+			<BarChart data={value} />
 			<LineChart />
+
 		</Fragment>
 	);
 };

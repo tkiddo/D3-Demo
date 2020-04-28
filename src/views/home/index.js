@@ -1,7 +1,7 @@
 import React from 'react';
 import './index.scss';
 
-import LineChart from '../../components/chart/lineChart';
+import Charts from '../../components/chart'
 import Menu from '../../components/menu';
 
 const Home = () => {
@@ -10,7 +10,7 @@ const Home = () => {
 		<div>
 			<Menu />
 			<div className='wrapper'>
-				<LineChart />
+				<Charts />
 			</div>
 
 		</div>
