@@ -47,13 +47,31 @@ function Pie(props) {
 
 	let arc = d3
 		.arc()
-		.innerRadius(0) // 如果想要实现环图，修改这里的半径参数即可
+		.innerRadius(80) // 如果想要实现环图，修改这里的半径参数即可
 		.outerRadius(pieRadius);
 
 	return (
 		<Fragment>
 			<g
-				transform={`translate(${margin.left + pieRadius},${margin.top +
+				transform={`translate(${margin.left},${margin.top})`}>
+				{
+					data.map((d, i) => {
+						const y = 50 * i + 30;
+						const h = 20;
+						const w = 40;
+						return (
+							<g key={i}>
+								<rect x={0} y={y} width={w} height={h} fill={COLORS[i % COLORS.length]} />
+								<text fill={'#fff'} x={w * 1.5} y={y + h / 2} dominantBaseline={'middle'} >
+									{d.x}
+								</text>
+							</g>
+						)
+					})
+				}
+			</g>
+			<g
+				transform={`translate(${margin.left + pieRadius + 200},${margin.top +
 					pieRadius})`}
 			>
 				{pieData.map((d, i) => {
@@ -109,7 +127,7 @@ function Pie(props) {
 								x={center[0]}
 								y={center[1]}
 							>
-								{d.data.x}:{d.value}
+								{d.value}
 							</text>
 						</g>
 					);
