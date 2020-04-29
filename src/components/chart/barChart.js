@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import * as d3 from 'd3';
 
 import color from '../../assets/style/color';
-import { split } from '../../utils/index';
 
-
-const margin = {
-	top: 40,
-	right: 40,
-	bottom: 40,
-	left: 60
-};
-
-const WIDTH = 450;
-const HEIGHT = 400;
 const BarChart = (props) => {
-	const { first, second, grey } = color;
-	const { data } = props;
-	const chartWidth = WIDTH - margin.left - margin.right;
-	const chartHeight = HEIGHT - margin.bottom - margin.top;
+	const { second } = color;
+	const { data, chartWidth, chartHeight, margin } = props;
 
 	const [value, setValue] = useState(() => data.map(d => ({ ...d, y: 0 })));
 
@@ -52,34 +39,23 @@ const BarChart = (props) => {
 	//y轴
 	const yScale = d3
 		.scaleLinear()
-		.domain([0, d3.max(data.map(item => item.y))])
+		.domain([0, 350])
 		.range([chartHeight, 0])
 		.nice();
 
-
-	const v = split(HEIGHT);
-	const h = split(WIDTH);
 	return (
-		<svg width={WIDTH} height={HEIGHT}>
+
+		<Fragment>
 			<linearGradient id="linear-gradient" x1={0} x2={0} y1={1} y2={0}>
 				<stop offset="0%" stopColor="#16a3ff" />
 				<stop offset="100%" stopColor="#6ddead" />
 			</linearGradient>
-			{/* 边框 */}
-			<rect x={0} y={0} width={WIDTH} height={HEIGHT} stroke={second} fill={first} fillOpacity={'0.5'} rx={10} ry={10} strokeWidth={0.2} />
-			{/* 背景网格 */}
-			{
-				v.map((item, idx) => (
-					<line x1={0} y1={item} x2={WIDTH} y2={item} key={idx} stroke={grey} strokeWidth={0.2} />
-				))
-			}
-			{
-				h.map((item, idx) => (
-					<line x1={item} y1={0} x2={item} y2={HEIGHT} key={idx} stroke={grey} strokeWidth={0.2} />
-				))
-			}
 			<g
 				transform={`translate(${margin.left},${margin.top})`}>
+				{/* 标题 */}
+				<text x={chartWidth / 2} y={0} textAnchor={'middle'} fill={'#fff'}>
+					柱形图
+				</text>
 				{/* x轴 */}
 				<g
 					transform={`translate(0,${chartHeight})`}>
@@ -144,10 +120,10 @@ const BarChart = (props) => {
 			</g>
 
 
-		</svg>
+		</Fragment>
 	);
 };
 
-export default BarChart;
+export default React.memo(BarChart);
 
 //https://zhuanlan.zhihu.com/p/85862899

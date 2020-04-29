@@ -1,28 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import * as d3 from 'd3';
 import color from '../../assets/style/color';
-import { split } from '../../utils/index';
 
-const width = 600;
-const height = 400;
-const margin = { top: 50, left: 50, bottom: 50, right: 50 };
-const chartWidth = width - margin.left - margin.right;
-const chartHeight = height - margin.top - margin.bottom;
 
-const data = [
-	{ year: '1991', value: 3 },
-	{ year: '1992', value: 4 },
-	{ year: '1993', value: 3.5 },
-	{ year: '1994', value: 5 },
-	{ year: '1995', value: 4.9 },
-	{ year: '1996', value: 6 },
-	{ year: '1997', value: 7 },
-	{ year: '1998', value: 9 },
-	{ year: '1999', value: 13 }
-];
 
-const LineChart = () => {
-	const { first, second, third, grey, forth } = color;
+const LineChart = (props) => {
+	const { second, third } = color;
+	const { data, chartWidth, chartHeight, margin } = props;
+	//x轴比例尺
 	const xScale = d3
 		.scaleBand()
 		.domain(data.map(item => item.year))
@@ -31,14 +16,17 @@ const LineChart = () => {
 		.paddingOuter(0.4)
 		.round(true);
 
+	//带宽
 	const bandWidth = xScale.bandwidth();
 
+	//y轴比例尺
 	const yScale = d3
 		.scaleLinear()
 		.domain([0, d3.max(data.map(item => item.value))])
 		.range([chartHeight, 0])
 		.nice();
 
+	//折线
 	const line = d3
 		.line()
 		.x(d => {
@@ -49,13 +37,12 @@ const LineChart = () => {
 		})
 		.curve(d3.curveCatmullRom);
 
-	const v = split(height);
-	const h = split(width);
-
+	//path节点
 	const curveLine = useRef();
 
+	//动画
 	const [value, setValue] = useState(0);
-	const [l, setL] = useState(0)
+	const [l, setL] = useState(0);
 	useEffect(() => {
 		setL(curveLine.current.getTotalLength())
 		const t = d3.transition('line').duration(2000);
@@ -67,21 +54,14 @@ const LineChart = () => {
 
 	}, [])
 
+	//鼠标移到折线上的监听事件
+	const [showIdx, setShowIdx] = useState(-1);
+	const handleHover = (idx) => {
+		setShowIdx(idx);
+	}
+
 	return (
-		<svg width={width} height={height}>
-			{/* 边框 */}
-			<rect x={0} y={0} width={width} height={height} stroke={forth} fill={first} fillOpacity={'0.5'} rx={10} ry={10} strokeWidth={0.1} />
-			{/* 背景网格 */}
-			{
-				v.map((item, idx) => (
-					<line x1={0} y1={item} x2={width} y2={item} key={idx} stroke={grey} strokeWidth={0.2} />
-				))
-			}
-			{
-				h.map((item, idx) => (
-					<line x1={item} y1={0} x2={item} y2={height} key={idx} stroke={grey} strokeWidth={0.2} />
-				))
-			}
+		<Fragment>
 			<g
 				transform={`translate(${margin.left},${margin.top})`}>
 				{/* 标题 */}
@@ -141,26 +121,31 @@ const LineChart = () => {
 				{/* 连线 */}
 				<path d={line(data)} stroke={'purple'} fill={'none'} ref={curveLine} strokeDasharray={`${l * value},${l}`} strokeWidth={2} />
 				{/* 数据点 */}
-				{/* <g>
+				<g>
 					{
 						data.map((item, idx) => {
 							const x = xScale(item.year) + bandWidth / 2;
 							const y = yScale(item.value);
 							return (
 								<g key={idx}>
-									<circle cx={x} cy={y} r={'5'} fill={third} />
-									<text x={x} y={y - 10} textAnchor={'middle'} fill={second}>
-										{item.value}
-									</text>
+									<circle cx={x} cy={y} r={'5'} fill={third} onMouseEnter={handleHover.bind(this, idx)} onMouseLeave={() => setShowIdx(-1)} />
+									{
+										showIdx === idx && (
+											<text x={x} y={y - 10} textAnchor={'middle'} fill={second}>
+												{item.value}
+											</text>
+										)
+									}
+
 								</g>
 							);
 						})
 					}
 
-				</g> */}
+				</g>
 			</g>
-		</svg>
+		</Fragment>
 	);
 };
 
-export default LineChart;
+export default React.memo(LineChart);

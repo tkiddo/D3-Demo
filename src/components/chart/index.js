@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import BarChart from './barChart';
 import LineChart from './lineChart';
-import PieChart from './pieChart'
+import PieChart from './pieChart';
+import Wrapper from './wrapper';
 
 const data = [
 	{
@@ -27,21 +28,20 @@ const data = [
 ];
 
 const Charts = () => {
-	const [value, setValue] = useState([]);
+	const [value, setValue] = useState(data);
 	useEffect(() => {
-		setTimeout(() => {
-			setValue(data);
-		}, 10);
+		// setInterval(() => {
+		// 	setValue(data.map(d => ({ ...d, y: d.y * Math.random() })));
+		// }, 1000);
 	}, []);
 	return (
 		<Fragment>
+			<BarChart data={value} />
 			<LineChart />
 			<PieChart />
-			<BarChart data={value} />
-
-
+			<Wrapper width={600} height={400} />
 		</Fragment>
 	);
 };
 
-export default Charts;
+export default React.memo(Charts);

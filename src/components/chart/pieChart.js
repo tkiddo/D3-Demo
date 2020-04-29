@@ -1,39 +1,8 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import * as d3 from "d3";
-import color from '../../assets/style/color'
+import color from '../../assets/style/color';
 
-const data = [
-	{
-		x: "x1",
-		y: 320
-	},
-	{
-		x: "x2",
-		y: 200
-	},
-	{
-		x: "x3",
-		y: 25
-	},
-	{
-		x: "x4",
-		y: 190
-	},
-	{
-		x: "x5",
-		y: 90
-	}
-];
-
-const WIDTH = 450;
-const HEIGHT = 400;
-const margin = {
-	top: 20,
-	right: 0,
-	bottom: 30,
-	left: 40
-};
 const COLORS = ["#16a3ff", "#6ddead", "#5edfff", "#3e64ff", "#505bda"];
 
 const normalStyle = {
@@ -51,10 +20,9 @@ const noHoverStyle = {
 	opacity: 0.5
 };
 
-function Pie() {
-	const chartWidth = WIDTH - margin.left - margin.right;
-	const chartHeight = HEIGHT - margin.top - margin.bottom;
+function Pie(props) {
 	const { third } = color;
+	const { data, chartWidth, chartHeight, margin } = props;
 
 	const [value, setValue] = useState(0);
 	const [active, setActive] = useState(null);
@@ -83,7 +51,7 @@ function Pie() {
 		.outerRadius(pieRadius);
 
 	return (
-		<svg width={WIDTH} height={HEIGHT}>
+		<Fragment>
 			<g
 				transform={`translate(${margin.left + pieRadius},${margin.top +
 					pieRadius})`}
@@ -147,8 +115,8 @@ function Pie() {
 					);
 				})}
 			</g>
-		</svg>
+		</Fragment>
 	);
 }
 
-export default Pie
+export default React.memo(Pie)
