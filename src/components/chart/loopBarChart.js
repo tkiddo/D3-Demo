@@ -9,6 +9,7 @@ const COLORS = randomColor(12)
 const LoopBarChart = (props) => {
 	const { data, chartWidth, chartHeight, margin } = props;
 	const outerRadius = d3.min([chartWidth, chartHeight]) / 2;
+	const innerRadius = 60;
 
 	//x轴
 	const xScale = d3
@@ -16,12 +17,13 @@ const LoopBarChart = (props) => {
 		.domain(data.map(d => d.month))
 		.range([0, 2 * Math.PI])
 		.align(0)
+	const bandWidth = xScale.bandwidth()
 
 	//y轴
 	const yScale = d3
 		.scaleLinear()
 		.domain([0, 100])
-		.range([40, outerRadius])
+		.range([innerRadius, outerRadius])
 
 	//同心圆
 	const arc = d3
@@ -60,20 +62,33 @@ const LoopBarChart = (props) => {
 
 	const noHoverStyle = {
 		opacity: 0.5
-	}; 
+	};
 	return (
 		<Fragment>
 			<g
 				transform={`translate(${margin.left + chartWidth / 2},${margin.top + chartHeight / 2})`}>
 
 				{
-					// data.map((d, i) => {
-					// 	return (
-					// 		<g transform={`rotate(${xScale(d.month) * 360})`} key={i}>
-					// 			<line x1={0} y1={0} x2={0} y2={-5} stroke={'#fff'} />
-					// 		</g>
-					// 	)
-					// })
+					data.map((d, i) => {
+						const deg = (xScale(d.month) + bandWidth / 2) * 180 / Math.PI
+						return (
+							<g transform={`rotate(${deg}) translate(0,${-innerRadius})`} key={i}>
+								<line x1={0} y1={0} x2={0} y2={5} stroke={'#fff'} />
+								<text fill={'#fff'} fontSize={9} x={0} y={15} textAnchor={'middle'}>
+									{d.month}
+								</text>
+							</g>
+						)
+					})
+				}
+				{
+					yScale.ticks(3).map((d, i) => {
+						const y = yScale(d);
+						const arcGen = arc
+							.innerRadius(0)
+							.outerRadius(y)
+						return <path d={arcGen()} stroke={'#fff'} fill={'transparent'} key={i} />
+					})
 				}
 				{
 					data.map((d, i) => {
@@ -88,22 +103,15 @@ const LoopBarChart = (props) => {
 							<g key={i}
 								style={style}
 								onMouseEnter={() => setActive(i)}
-								onMouseLeave={() => setActive(-1)}>
+								onMouseLeave={() => setActive(-1)}
+							>
 								<path d={arcGen()} fill={COLORS[i % 12]} />
 							</g>
 						)
 					})
 				}
 
-				{
-					yScale.ticks(3).map((d, i) => {
-						const y = yScale(d);
-						const arcGen = arc
-							.innerRadius(0)
-							.outerRadius(y)
-						return <path d={arcGen()} stroke={'#fff'} fill={'transparent'} key={i} />
-					})
-				}
+
 
 
 			</g>
